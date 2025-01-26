@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.schemas.user import UserCreate, UserResponse
+from app.schemas.user import UserCreate, UserResponse, LoginRequest
 from app.services.user_service import create_user, authenticate_user
 from app.core.security import create_access_token, get_password_hash
 from app.core.database import get_db
@@ -15,8 +15,8 @@ async def signup(user: UserCreate, db: AsyncSession = Depends(get_db)):
     return user_exists
 
 @router.post("/login")
-async def login(email: str, password: str, db: AsyncSession = Depends(get_db)):
-    user = await authenticate_user(email, password, db)
+async def login(login_request: LoginRequest, db: AsyncSession = Depends(get_db)):
+    user = await authenticate_user(login_request.email, login_request.password, db)
     if not user:
         raise HTTPException(status_code=400, detail="Invalid credentials")
     access_token = create_access_token({"sub": user.email})

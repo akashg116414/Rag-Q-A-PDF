@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Q&A Results</h1>
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h5 class="card-title">Your Question</h5>
+            <p class="card-text" id="user-question">What is the meaning of life?</p>
+            <hr>
+            <h5 class="card-title">Answer</h5>
+            <p class="card-text text-success" id="answer">
+                The meaning of life is subjective and varies for everyone.
+            </p>
+        </div>
+    </div>
+    <div class="mt-4 text-center">
+        <a href="/qa" class="btn btn-primary">Ask Another Question</a>
+        <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+
+<script>
+    // JavaScript to dynamically populate the question and answer
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Assume we fetch the result from an API endpoint or local storage
+        const question = localStorage.getItem("user_question");
+        const answer = localStorage.getItem("qa_answer");
+
+        // Populate the result fields
+        document.getElementById("user-question").innerText = question || "Your question will appear here.";
+        document.getElementById("answer").innerText = answer || "Answer not found.";
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A</title>
+</head>
+<body>
+    <h1>Ask a Question</h1>
+    <form action="/qa" method="post">
+        <label for="question">Question:</label>
+        <textarea id="question" name="question" rows="4" cols="50" required></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="answers">
+        {% if answer %}
+        <h2>Answer:</h2>
+        <p>{{ answer }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
