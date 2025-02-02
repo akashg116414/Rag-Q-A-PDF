@@ -13,3 +13,7 @@ venv/
 
 __pycache__/
 test.db
+
+uploaded_pdfs/
+
+vector_db/

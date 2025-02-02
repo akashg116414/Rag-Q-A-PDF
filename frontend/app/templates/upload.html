@@ -1,30 +1,66 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="container mt-5">
-    <h1 class="mb-4">Upload Document</h1>
+    <h1>Upload PDF Document</h1>
+    
+    <!-- Status Message -->
+    <div id="upload-status" class="alert" style="display: none;"></div>
+    
+    <!-- Loader -->
+    <div id="loader" style="display: none;">Uploading...</div>
+
+    <!-- Form -->
     <form id="upload-form">
         <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" id="title" class="form-control" placeholder="Document title">
-        </div>
-        <div class="mb-3">
-            <label for="content" class="form-label">Content</label>
-            <textarea id="content" class="form-control" rows="5" placeholder="Document content"></textarea>
+            <input type="file" id="file" class="form-control" accept=".pdf" required>
         </div>
         <button type="submit" class="btn btn-success">Upload</button>
     </form>
 </div>
+
 <script>
-    document.getElementById("upload-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const title = document.getElementById("title").value;
-        const content = document.getElementById("content").value;
-        await fetch("/api/documents", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, content })
-        });
-        alert("Document uploaded successfully!");
+    document.getElementById("upload-form").addEventListener("submit", async function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        let fileInput = document.getElementById("file");
+        let formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        // Show loader
+        document.getElementById("loader").style.display = "block";
+
+        try {
+            let response = await fetch("http://127.0.0.1:8000/api/upload", {
+                method: "POST",
+                body: formData,
+                redirect: 'manual'  // Prevent automatic redirection
+            });
+
+            // Hide loader
+            document.getElementById("loader").style.display = "none";
+
+            let result = await response.json();
+
+            if (response.ok) {
+                // Show success status in green
+                document.getElementById("upload-status").innerText = `File uploaded successfully! Document Name: ${result.filename}`;
+                document.getElementById("upload-status").className = "alert alert-success";  // Green color
+                document.getElementById("upload-status").style.display = "block";
+            } else {
+                // Show error status in red
+                document.getElementById("upload-status").innerText = result.detail || "Upload failed!";
+                document.getElementById("upload-status").className = "alert alert-danger";  // Red color
+                document.getElementById("upload-status").style.display = "block";
+            }
+        } catch (error) {
+            // Hide loader in case of an error
+            document.getElementById("loader").style.display = "none";
+            console.error("Upload error:", error);
+            document.getElementById("upload-status").innerText = "An error occurred during the upload.";
+            document.getElementById("upload-status").className = "alert alert-danger";  // Red color
+            document.getElementById("upload-status").style.display = "block";
+        }
     });
 </script>
 {% endblock %}
