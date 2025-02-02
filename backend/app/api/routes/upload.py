@@ -8,7 +8,7 @@ from app.utils.pdf_utils import extract_text_from_pdf
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 
-router = APIRouter(tags=["Upload Documents"])  # ✅ Added "/api" prefix
+router = APIRouter(tags=["Upload Documents"])
 
 UPLOAD_FOLDER = "uploaded_pdfs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
