@@ -7,12 +7,14 @@ from app.core.database import get_db
 
 router = APIRouter()
 
+
 @router.post("/signup", response_model=UserResponse)
 async def signup(user: UserCreate, db: AsyncSession = Depends(get_db)):
     user_exists = await create_user(user, db)
     if not user_exists:
         raise HTTPException(status_code=400, detail="User already exists")
     return user_exists
+
 
 @router.post("/login")
 async def login(login_request: LoginRequest, db: AsyncSession = Depends(get_db)):

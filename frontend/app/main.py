@@ -6,7 +6,6 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 # Import routers
 from app.pages.home import router as home_router
-from app.pages.dashboard import router as dashboard_router
 from app.pages.qa import router as qa_router
 from app.pages.upload import router as upload_router
 from app.components.auth.login import router as login_router
@@ -17,6 +16,7 @@ app = FastAPI(title="Document Q&A Frontend")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 templates = Jinja2Templates(directory="app/templates")
+
 
 # Authentication Middleware
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -35,11 +35,11 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
         return await call_next(request)
 
+
 app.add_middleware(AuthMiddleware)
 
 # Include routers
 app.include_router(home_router, prefix="")
-app.include_router(dashboard_router, prefix="")
 app.include_router(qa_router, prefix="")
 app.include_router(upload_router, prefix="")
 app.include_router(login_router, prefix="/auth")

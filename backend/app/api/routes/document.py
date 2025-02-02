@@ -6,6 +6,7 @@ from app.models.document import Document
 
 router = APIRouter()
 
+
 @router.get("/list/")
 async def list_documents(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Document))

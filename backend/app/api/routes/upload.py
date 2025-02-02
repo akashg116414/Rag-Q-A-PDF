@@ -13,6 +13,7 @@ router = APIRouter(tags=["Upload Documents"])
 UPLOAD_FOLDER = "uploaded_pdfs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
 @router.post("/upload", status_code=201)
 async def upload_pdf(file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)

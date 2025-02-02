@@ -13,8 +13,11 @@ from langchain.vectorstores import FAISS
 
 router = APIRouter()
 
+
 @router.post("/ask")
-async def ask_question(document_id: int, question: str, db: AsyncSession = Depends(get_db)):
+async def ask_question(
+    document_id: int, question: str, db: AsyncSession = Depends(get_db)
+):
     # Verify document exists
     result = await db.execute(select(Document).where(Document.id == document_id))
 
@@ -31,7 +34,9 @@ async def ask_question(document_id: int, question: str, db: AsyncSession = Depen
 
     # Load FAISS database
     embeddings = OpenAIEmbeddings()
-    vector_store = FAISS.load_local("vector_db/", embeddings, allow_dangerous_deserialization=True)
+    vector_store = FAISS.load_local(
+        "vector_db/", embeddings, allow_dangerous_deserialization=True
+    )
     retriever = vector_store.as_retriever()
 
     # Define RAG pipeline
@@ -41,16 +46,15 @@ async def ask_question(document_id: int, question: str, db: AsyncSession = Depen
         "Use three sentences maximum and keep the answer concise. "
         "Context: {context}"
     )
-    
+
     prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", system_prompt),
-            ("human", "{question}")
-        ]
+        [("system", system_prompt), ("human", "{question}")]
     )
 
     # Use RetrievalQA instead of create_retrieval_chain
-    qa_chain = RetrievalQA.from_llm(ChatOpenAI(temperature=0.7, model="gpt-4-turbo"), retriever=retriever)
+    qa_chain = RetrievalQA.from_llm(
+        ChatOpenAI(temperature=0.7, model="gpt-4-turbo"), retriever=retriever
+    )
 
     # Get answer
     response = qa_chain.run(question)

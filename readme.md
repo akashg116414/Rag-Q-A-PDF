@@ -156,6 +156,21 @@ fastapi-qa-app/
   docker-compose up --build
   ```
 
+
+## 📌 Running the Test Cases
+
+### 🔹 **Step 1: For Backend**  
+```sh
+cd backend
+pytest tests
+```
+
+### 🔹 **Step 2: For Frontend**  
+```sh
+cd frontend
+pytest tests
+```
+
 ---
 📌 **Author:** Akash Garg
 📌 **GitHub Repo:** [https://github.com/akashg116414](https://github.com/akashg116414)
